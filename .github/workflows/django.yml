@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  prebuild:
+  cpp_prebuild:
     runs-on: ubuntu-latest
 
     steps:
@@ -65,9 +65,9 @@ jobs:
           path: deploy.zip
           retention-days: 7
 
-  deploy:
+  cpp_deploy:
     runs-on: ubuntu-latest
-    needs: prebuild
+    needs: cpp_prebuild
 
     steps:
       - name: Download artifact
