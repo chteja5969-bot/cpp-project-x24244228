@@ -1,0 +1,57 @@
+{% extends 'vehicle/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-user-check me-2 text-warning"></i>Pending Mechanic Approvals</h5>
+            <span class="badge-custom badge-pending">{{ mechanics|length }} Pending</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Profile</th>
+                        <th>Mobile</th>
+                        <th>Address</th>
+                        <th>Skills</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in mechanics %}
+                    <tr>
+                        <td><strong>{{ m.get_name }}</strong></td>
+                        <td>
+                            <img src="{% static m.profile_pic.url %}" alt="Profile" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                        </td>
+                        <td>{{ m.mobile }}</td>
+                        <td>{{ m.address }}</td>
+                        <td><span class="badge-custom badge-approved">{{ m.skill }}</span></td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'approve-mechanic' m.id %}" class="btn btn-sm btn-success rounded-pill px-3">
+                                    <i class="fas fa-check me-1"></i> Approve
+                                </a>
+                                <a href="{% url 'delete-mechanic' m.id %}" class="btn btn-sm btn-danger rounded-pill px-3" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-times me-1"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-check-circle text-success fs-3 d-block mb-2"></i>
+                            No pending mechanic approvals
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

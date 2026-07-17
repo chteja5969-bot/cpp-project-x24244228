@@ -1,0 +1,61 @@
+{% extends 'vehicle/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-tools me-2 text-primary"></i>All Mechanics</h5>
+            <a href="/admin-add-mechanic" class="btn btn-primary-custom btn-sm rounded-pill px-4">
+                <i class="fas fa-plus me-1"></i> Add Mechanic
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Profile</th>
+                        <th>Mobile</th>
+                        <th>Address</th>
+                        <th>Skills</th>
+                        <th>Salary</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in mechanics %}
+                    <tr>
+                        <td><strong>{{ m.get_name }}</strong></td>
+                        <td>
+                            <img src="{ m.profile_pic.url }" alt="Profile" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                        </td>
+                        <td>{{ m.mobile }}</td>
+                        <td>{{ m.address }}</td>
+                        <td><span class="badge-custom badge-approved">{{ m.skill }}</span></td>
+                        <td><strong>₹{{ m.salary|default:"0" }}</strong></td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'update-mechanic' m.id %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">
+                                    <i class="fas fa-edit me-1"></i>
+                                </a>
+                                <a href="{% url 'delete-mechanic' m.id %}" class="btn btn-sm btn-danger rounded-pill px-3" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash me-1"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="fas fa-users text-muted fs-3 d-block mb-2"></i>
+                            No mechanics found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

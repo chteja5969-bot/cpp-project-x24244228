@@ -1,0 +1,321 @@
+{% extends 'vehicle/customerbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-file-invoice me-2 text-primary"></i>My Invoices</h5>
+            <span class="badge-custom badge-approved">{{ enquiries|length }} Invoices</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Number</th>
+                        <th>Problem</th>
+                        <th>Date</th>
+                        <th>Cost</th>
+                        <th>Invoice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enq in enquiries %}
+                    <tr>
+                        <td><strong>{{ enq.vehicle_name }}</strong></td>
+                        <td>{{ enq.vehicle_no }}</td>
+                        <td>{{ enq.problem_description|truncatechars:30 }}</td>
+                        <td>{{ enq.date }}</td>
+                        <td><strong class="text-primary">₹{{ enq.cost|default:"0" }}</strong></td>
+                        <td>
+                            <button class="btn btn-primary-custom btn-sm rounded-pill px-3 download-invoice" 
+                                    data-enquiry-id="{{ enq.id }}"
+                                    onclick="downloadInvoice(this, {{ enq.id }})">
+                                <i class="fas fa-download me-1"></i> PDF
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-file-invoice text-muted fs-3 d-block mb-2"></i>
+                            No invoices available
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .download-invoice.loading {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+    
+    .download-invoice .spinner {
+        display: none;
+    }
+    
+    .download-invoice.loading .spinner {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .toast-notification {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid var(--primary);
+        transform: translateX(120%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 9999;
+        min-width: 280px;
+        max-width: 400px;
+    }
+    
+    .toast-notification.show {
+        transform: translateX(0);
+    }
+    
+    .toast-notification .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .toast-notification .toast-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .toast-notification .toast-icon.success {
+        background: rgba(0, 217, 126, 0.12);
+        color: #00D97E;
+    }
+    
+    .toast-notification .toast-icon.error {
+        background: rgba(255, 107, 107, 0.12);
+        color: #FF6B6B;
+    }
+    
+    .toast-notification .toast-icon.info {
+        background: rgba(74, 108, 247, 0.12);
+        color: var(--primary);
+    }
+    
+    .toast-notification .toast-message {
+        flex: 1;
+    }
+    
+    .toast-notification .toast-message h6 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--dark);
+    }
+    
+    .toast-notification .toast-message p {
+        margin: 2px 0 0;
+        font-size: 0.85rem;
+        color: var(--gray);
+    }
+    
+    .toast-notification .toast-close {
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        padding: 4px;
+        font-size: 1.1rem;
+    }
+    
+    .toast-notification .toast-close:hover {
+        color: var(--dark);
+    }
+</style>
+
+<!-- Toast Notification -->
+<div class="toast-notification" id="toastNotification">
+    <div class="toast-content">
+        <div class="toast-icon" id="toastIcon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="toast-message">
+            <h6 id="toastTitle">Success</h6>
+            <p id="toastMessage">Invoice downloaded successfully</p>
+        </div>
+        <button class="toast-close" onclick="closeToast()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+function downloadInvoice(button, enquiryId) {
+    const csrfToken = getCookie('csrftoken');
+    
+    // Show loading state
+    const originalText = button.innerHTML;
+    button.innerHTML = '<span class="spinner"><i class="fas fa-spinner"></i></span> Generating...';
+    button.classList.add('loading');
+    button.disabled = true;
+    
+    // Call Lambda via Django view
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+    
+    fetch(`/download-invoice/${enquiryId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.error || 'Failed to generate invoice');
+            });
+        }
+        
+        // Check content-type
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/pdf')) {
+            // PDF response - download directly
+            return response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `invoice_${enquiryId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                showToast('success', 'Success', 'Invoice downloaded successfully!');
+                throw new Error('PDF_DOWNLOADED'); // Special signal to stop further processing
+            });
+        }
+        
+        // JSON response
+        return response.json();
+    })
+    .then(data => {
+        // Check if PDF was already downloaded
+        if (data === 'PDF_DOWNLOADED') return;
+        
+        if (data.success && data.pdf_base64) {
+            // Decode base64 and download
+            const byteCharacters = atob(data.pdf_base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = data.filename || `invoice_${enquiryId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            showToast('success', 'Success', 'Invoice downloaded successfully!');
+        } else if (data.error) {
+            showToast('error', 'Error', data.error);
+        } else {
+            showToast('error', 'Error', 'Unexpected response from server');
+        }
+    })
+    .catch(error => {
+        // Ignore the PDF_DOWNLOADED signal
+        if (error.message === 'PDF_DOWNLOADED') return;
+        console.error('Download error:', error);
+        showToast('error', 'Generation Failed', error.message || 'Unable to generate invoice. Please try again.');
+    })
+    .finally(() => {
+        // Reset button (with delay to prevent issues)
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('loading');
+            button.disabled = false;
+        }, 500);
+    });
+}
+
+function showToast(type, title, message) {
+    const toast = document.getElementById('toastNotification');
+    const icon = document.getElementById('toastIcon');
+    const titleEl = document.getElementById('toastTitle');
+    const messageEl = document.getElementById('toastMessage');
+    
+    icon.className = 'toast-icon';
+    
+    if (type === 'success') {
+        icon.classList.add('success');
+        icon.innerHTML = '<i class="fas fa-check"></i>';
+    } else if (type === 'error') {
+        icon.classList.add('error');
+        icon.innerHTML = '<i class="fas fa-times"></i>';
+    } else {
+        icon.classList.add('info');
+        icon.innerHTML = '<i class="fas fa-info"></i>';
+    }
+    
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+    
+    toast.classList.add('show');
+    
+    clearTimeout(window.toastTimeout);
+    window.toastTimeout = setTimeout(() => {
+        closeToast();
+    }, 5000);
+}
+
+function closeToast() {
+    document.getElementById('toastNotification').classList.remove('show');
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+document.addEventListener('click', function(e) {
+    const toast = document.getElementById('toastNotification');
+    if (toast.classList.contains('show') && !toast.contains(e.target)) {
+        closeToast();
+    }
+});
+</script>
+{% endblock %}

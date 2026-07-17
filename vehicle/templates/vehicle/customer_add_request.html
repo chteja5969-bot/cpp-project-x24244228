@@ -1,0 +1,47 @@
+{% extends 'vehicle/customerbase.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-custom">
+                <h4 class="fw-bold mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>New Service Request</h4>
+                <p class="text-muted">Fill in the details below to submit a service request</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Vehicle Category</label>
+                            {% render_field enquiry.category class="form-control" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Vehicle Number</label>
+                            {% render_field enquiry.vehicle_no class="form-control" placeholder="e.g., 1234" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Vehicle Name</label>
+                            {% render_field enquiry.vehicle_name class="form-control" placeholder="e.g., Swift" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Vehicle Brand</label>
+                            {% render_field enquiry.vehicle_brand class="form-control" placeholder="e.g., Maruti" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Vehicle Model</label>
+                            {% render_field enquiry.vehicle_model class="form-control" placeholder="e.g., VXI" %}
+                        </div>
+                        <div class="col-12">
+                            <label>Problem Description</label>
+                            {% render_field enquiry.problem_description class="form-control" rows="4" placeholder="Describe the issue in detail..." %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit mt-4">
+                        <i class="fas fa-paper-plane me-2"></i> Submit Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

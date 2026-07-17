@@ -1,0 +1,26 @@
+{% extends 'vehicle/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 60vh;">
+    <div class="container-fluid px-4 text-center">
+        <div class="hero-content" style="max-width: 600px; margin: 0 auto;">
+            <div class="mb-4">
+                <img src="{% static 'images/success.png' %}" alt="Success" style="max-width: 80px;">
+            </div>
+            <h1 class="hero-title" style="font-size: 2.5rem;">Message Sent!</h1>
+            <p class="hero-subtitle" style="margin: 0 auto 30px;">
+                Thank you for reaching out. We'll get back to you as soon as possible.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="/" class="btn btn-primary-custom">
+                    <i class="fas fa-home me-2"></i> Back to Home
+                </a>
+                <a href="/contactus" class="btn btn-outline-custom">
+                    <i class="fas fa-envelope me-2"></i> Send Another
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

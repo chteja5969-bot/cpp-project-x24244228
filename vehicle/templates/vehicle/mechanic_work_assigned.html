@@ -1,0 +1,66 @@
+{% extends 'vehicle/mechanicbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-clipboard-list me-2 text-primary"></i>Vehicles Assigned to You</h5>
+            <span class="badge-custom badge-approved">{{ works|length }} Assignments</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Category</th>
+                        <th>Number</th>
+                        <th>Model</th>
+                        <th>Brand</th>
+                        <th>Problem</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for w in works %}
+                    <tr>
+                        <td><strong>{{ w.vehicle_name }}</strong></td>
+                        <td><span class="badge-custom badge-approved">{{ w.category }}</span></td>
+                        <td>{{ w.vehicle_no }}</td>
+                        <td>{{ w.vehicle_model }}</td>
+                        <td>{{ w.vehicle_brand }}</td>
+                        <td>{{ w.problem_description|truncatechars:25 }}</td>
+                        <td>
+                            {% if w.status == 'Pending' %}
+                            <span class="badge-custom badge-pending">{{ w.status }}</span>
+                            {% elif w.status == 'Approved' %}
+                            <span class="badge-custom badge-approved">{{ w.status }}</span>
+                            {% elif w.status == 'Repairing' %}
+                            <span class="badge-custom badge-repairing">{{ w.status }}</span>
+                            {% elif w.status == 'Repairing Done' %}
+                            <span class="badge-custom badge-done">{{ w.status }}</span>
+                            {% else %}
+                            <span class="badge-custom badge-released">{{ w.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'mechanic-update-status' w.id %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">
+                                <i class="fas fa-edit me-1"></i> Update
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="fas fa-check-circle text-success fs-3 d-block mb-2"></i>
+                            No vehicles assigned at the moment
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

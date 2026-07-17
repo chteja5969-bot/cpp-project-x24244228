@@ -1,0 +1,39 @@
+{% extends 'vehicle/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 70vh; background: linear-gradient(135deg, #F8FAFF 0%, #EEF2FF 100%);">
+    <div class="container-fluid px-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="auth-box">
+                    <div class="text-center mb-4">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; color: white; box-shadow: 0 8px 30px rgba(74, 108, 247, 0.25);">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h4 class="auth-title">Mechanic Login</h4>
+                        <p class="auth-subtitle">Access your work dashboard</p>
+                    </div>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label>Username</label>
+                            {% render_field form.username class="form-control" placeholder="Enter username" %}
+                        </div>
+                        <div class="mb-4">
+                            <label>Password</label>
+                            {% render_field form.password class="form-control" placeholder="Enter password" %}
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
+                        </button>
+                    </form>
+                    <p class="text-center mt-3 text-muted">
+                        Don't have an account? <a href="/mechanicsignup" class="text-primary fw-bold text-decoration-none">Apply Now</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

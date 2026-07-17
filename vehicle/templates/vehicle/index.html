@@ -1,0 +1,120 @@
+{% extends 'vehicle/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container-fluid px-4">
+        <div class="row align-items-center">
+            <div class="col-lg-7 hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star me-1"></i> Trusted by 5000+ customers
+                </div>
+                <h1 class="hero-title">
+                    Professional Vehicle<br>
+                    <span>Service Management</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Streamline your vehicle maintenance with our comprehensive service platform.
+                    Book services, track repairs, and manage your fleet effortlessly.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/customerclick" class="btn btn-primary-custom">
+                        <i class="fas fa-user me-2"></i> Get Started
+                    </a>
+                    <a href="/aboutus" class="btn btn-outline-custom">
+                        <i class="fas fa-info-circle me-2"></i> Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <img src="{% static 'images/hero-vehicle.png' %}" alt="Vehicle Service" class="img-fluid" style="max-width: 100%;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container-fluid px-4">
+        <div class="text-center mb-5">
+            <span class="hero-badge">Our Services</span>
+            <h2 class="section-title">Comprehensive Vehicle Solutions</h2>
+            <p class="section-subtitle">We provide end-to-end vehicle service management for all types of vehicles</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <h5>Customer Portal</h5>
+                    <p>Book service requests, track repair status, and manage your vehicle history with ease.</p>
+                    <a href="/customerclick" class="btn-link-custom">
+                        Explore <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h5>Mechanic Dashboard</h5>
+                    <p>Manage assigned work, update repair status, and track your performance metrics.</p>
+                    <a href="/mechanicsclick" class="btn-link-custom">
+                        Explore <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h5>Admin Analytics</h5>
+                    <p>Monitor operations, manage users, and generate detailed reports for your business.</p>
+                    <a href="/adminclick" class="btn-link-custom">
+                        Explore <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Brand Marquee -->
+<div class="brand-marquee">
+    <div class="container-fluid px-4">
+        <div class="d-flex justify-content-around align-items-center flex-wrap">
+            <img src="{% static 'images/ferrari.png' %}" alt="Ferrari">
+            <img src="{% static 'images/ford.png' %}" alt="Ford">
+            <img src="{% static 'images/lambo.png' %}" alt="Lamborghini">
+            <img src="{% static 'images/mahindra.png' %}" alt="Mahindra">
+            <img src="{% static 'images/tvs.png' %}" alt="TVS">
+            <img src="{% static 'images/tata.png' %}" alt="Tata">
+            <img src="{% static 'images/hero.png' %}" alt="Hero">
+            <img src="{% static 'images/rolls.png' %}" alt="Rolls Royce">
+            <img src="{% static 'images/suzuki.png' %}" alt="Suzuki">
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: var(--primary-gradient);">
+    <div class="container-fluid px-4 text-center text-white">
+        <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
+        <p class="opacity-75 mb-4" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px;">
+            Join thousands of satisfied customers who trust us for their vehicle service needs.
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="/customerclick" class="btn btn-light px-5 py-3 fw-bold rounded-pill">
+                <i class="fas fa-user me-2"></i> I'm a Customer
+            </a>
+            <a href="/mechanicsclick" class="btn btn-outline-light px-5 py-3 fw-bold rounded-pill">
+                <i class="fas fa-tools me-2"></i> I'm a Mechanic
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

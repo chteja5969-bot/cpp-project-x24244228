@@ -1,0 +1,51 @@
+{% extends 'vehicle/customerbase.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="form-custom">
+                <h4 class="fw-bold mb-3"><i class="fas fa-user-edit text-primary me-2"></i>Edit Profile</h4>
+                <p class="text-muted">Update your personal information</p>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>First Name</label>
+                            {% render_field userForm.first_name class="form-control" placeholder="First name" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Last Name</label>
+                            {% render_field userForm.last_name class="form-control" placeholder="Last name" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Mobile</label>
+                            {% render_field customerForm.mobile class="form-control" placeholder="Phone number" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Address</label>
+                            {% render_field customerForm.address class="form-control" placeholder="Address" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Username</label>
+                            {% render_field userForm.username class="form-control" placeholder="Username" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label>Password</label>
+                            {% render_field userForm.password class="form-control" placeholder="New password" %}
+                        </div>
+                        <div class="col-12">
+                            <label>Profile Picture</label>
+                            {% render_field customerForm.profile_pic class="form-control" %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit mt-4">
+                        <i class="fas fa-save me-2"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

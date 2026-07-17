@@ -1,0 +1,29 @@
+{% extends 'vehicle/adminbase.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="form-custom text-center">
+                <div class="mb-4">
+                    <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 28px; color: white; box-shadow: 0 8px 30px rgba(74, 108, 247, 0.25);">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold">View Attendance</h4>
+                <p class="text-muted">Enter a date to view attendance records</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {% render_field form.date class="form-control" placeholder="mm/dd/yyyy" type="date" %}
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-search me-2"></i> View Records
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

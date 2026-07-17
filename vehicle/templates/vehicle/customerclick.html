@@ -1,0 +1,81 @@
+{% extends 'vehicle/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 70vh;">
+    <div class="container-fluid px-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-user me-1"></i> Customer Portal
+                </div>
+                <h1 class="hero-title">
+                    Welcome, <span>Customer</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Manage your vehicles, book service requests, track repairs, and view your service history all in one place.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/customerlogin" class="btn btn-primary-custom">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </a>
+                    <a href="/customersignup" class="btn btn-outline-custom">
+                        <i class="fas fa-user-plus me-2"></i> Sign Up
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block text-center">
+                <img src="{% static 'images/customer-hero.png' %}" alt="Customer" class="img-fluid" style="max-width: 90%;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features for Customers -->
+<section class="py-5" style="background: var(--light-gray);">
+    <div class="container-fluid px-4">
+        <div class="text-center mb-5">
+            <h2 class="section-title">What You Can Do</h2>
+            <p class="section-subtitle">Everything you need for your vehicle service needs</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <div class="icon-wrapper" style="width: 60px; height: 60px; font-size: 24px;">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h5>Book Service</h5>
+                    <p>Submit service requests for your vehicles easily</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <div class="icon-wrapper" style="width: 60px; height: 60px; font-size: 24px;">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h5>Track Status</h5>
+                    <p>Monitor repair progress in real-time</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <div class="icon-wrapper" style="width: 60px; height: 60px; font-size: 24px;">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h5>View History</h5>
+                    <p>Access complete service records</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <div class="icon-wrapper" style="width: 60px; height: 60px; font-size: 24px;">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <h5>Get Invoices</h5>
+                    <p>Download service bills and receipts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

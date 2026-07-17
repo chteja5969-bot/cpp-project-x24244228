@@ -1,0 +1,28 @@
+{% extends 'vehicle/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 60vh;">
+    <div class="container-fluid px-4 text-center">
+        <div class="hero-content" style="max-width: 600px; margin: 0 auto;">
+            <div class="mb-4">
+                <img src="{% static 'images/waiting.png' %}" alt="Waiting" style="max-width: 120px;">
+            </div>
+            <h1 class="hero-title" style="font-size: 2.5rem;">Hello {{ request.user.first_name }}</h1>
+            <div class="alert alert-warning p-4 rounded-4 mb-4" style="border: 2px solid var(--warning);">
+                <i class="fas fa-clock text-warning fs-4 d-block mb-2"></i>
+                <p class="mb-0 fw-bold">Your account is under review</p>
+            </div>
+            <p class="hero-subtitle" style="margin: 0 auto 20px;">
+                Our team is verifying your profile. You will be notified once your account is approved.
+                This usually takes 24-48 hours.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="/logout" class="btn btn-primary-custom">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

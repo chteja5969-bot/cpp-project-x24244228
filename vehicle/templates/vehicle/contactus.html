@@ -1,0 +1,79 @@
+{% extends 'vehicle/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<section class="contact-section">
+    <div class="container-fluid px-4">
+        <div class="text-center mb-5">
+            <span class="hero-badge">Contact Us</span>
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Have questions? We'd love to hear from you. Send us a message.</p>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-5">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <h6>Phone</h6>
+                            <p>+1 234 567 890</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h6>Email</h6>
+                            <p>info@vsm.com</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h6>Address</h6>
+                            <p>123 Service Street, City, State</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h6>Working Hours</h6>
+                            <p>Mon-Sat: 9AM - 9PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="form-custom">
+                    <h5 class="fw-bold mb-3">Send Us a Message</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name">Your Name</label>
+                            {% render_field form.Name class="form-control" placeholder="Enter your name" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="email">Email Address</label>
+                            {% render_field form.Email class="form-control" placeholder="Enter your email" %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="message">Message</label>
+                            {% render_field form.Message class="form-control" rows="4" placeholder="Write your message here..." %}
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane me-2"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

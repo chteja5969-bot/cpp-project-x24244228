@@ -1,0 +1,63 @@
+{% extends 'vehicle/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-users me-2 text-primary"></i>All Customers</h5>
+            <a href="/admin-add-customer" class="btn btn-primary-custom btn-sm rounded-pill px-4">
+                <i class="fas fa-plus me-1"></i> Add Customer
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Profile</th>
+                        <th>Mobile</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in customers %}
+                    <tr>
+                        <td><strong>{{ c.get_name }}</strong></td>
+                        <!--<td>-->
+                        <!--    <img src="{% static c.profile_pic.url %}" alt="Profile" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">-->
+                        <!--</td>-->
+                        
+                        <td>
+                            <img src="{{ c.profile_pic.url }}"
+                                 alt="Profile"
+                                 style="width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);">
+                        </td>
+                        <td>{{ c.mobile }}</td>
+                        <td>{{ c.address }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'update-customer' c.id %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">
+                                    <i class="fas fa-edit me-1"></i>
+                                </a>
+                                <a href="{% url 'delete-customer' c.id %}" class="btn btn-sm btn-danger rounded-pill px-3" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash me-1"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="fas fa-users text-muted fs-3 d-block mb-2"></i>
+                            No customers found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'vehicle/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <!-- Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(74, 108, 247, 0.1); color: var(--primary);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">{{ total_customer }}</div>
+                <div class="stat-label">Total Customers</div>
+                <span class="stat-change positive"><i class="fas fa-arrow-up me-1"></i> 12%</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(0, 210, 255, 0.1); color: var(--secondary);">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="stat-number">{{ total_mechanic }}</div>
+                <div class="stat-label">Total Mechanics</div>
+                <span class="stat-change positive"><i class="fas fa-arrow-up me-1"></i> 8%</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(255, 184, 0, 0.1); color: var(--warning);">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-number">{{ total_request }}</div>
+                <div class="stat-label">Total Enquiries</div>
+                <span class="stat-change positive"><i class="fas fa-arrow-up me-1"></i> 5%</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(0, 217, 126, 0.1); color: var(--success);">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="stat-number">{{ total_feedback }}</div>
+                <div class="stat-label">Total Feedback</div>
+                <span class="stat-change positive"><i class="fas fa-arrow-up me-1"></i> 3%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Enquiries Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-clock me-2 text-primary"></i>Recent Enquiries</h5>
+            <a href="/admin-view-request" class="btn btn-sm btn-outline-primary rounded-pill">
+                View All <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Vehicle</th>
+                        <th>Category</th>
+                        <th>Model</th>
+                        <th>Brand</th>
+                        <th>Problem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c,r in data %}
+                    <tr>
+                        <td><strong>{{ c.get_name }}</strong></td>
+                        <td>{{ r.vehicle_name }}</td>
+                        <td><span class="badge-custom badge-approved">{{ r.category }}</span></td>
+                        <td>{{ r.vehicle_model }}</td>
+                        <td>{{ r.vehicle_brand }}</td>
+                        <td>{{ r.problem_description|truncatechars:30 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">No recent enquiries</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

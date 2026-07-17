@@ -1,0 +1,12 @@
+Django==4.2.30
+gunicorn
+asgiref==3.8.1
+django-widget-tweaks==1.4.8
+pytz==2024.2
+sqlparse==0.5.3
+boto3
+psycopg2-binary
+Pillow
+django-storages
+requests
+feedback-sentiment-lib

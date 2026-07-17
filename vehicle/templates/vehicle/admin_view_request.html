@@ -1,0 +1,69 @@
+{% extends 'vehicle/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-clipboard-list me-2 text-primary"></i>All Requests</h5>
+            <a href="/admin-add-request" class="btn btn-primary-custom btn-sm rounded-pill px-4">
+                <i class="fas fa-plus me-1"></i> Add Request
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Vehicle</th>
+                        <th>Category</th>
+                        <th>Problem</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c,r in data %}
+                    <tr>
+                        <td><strong>{{ c.get_name }}</strong></td>
+                        <td>{{ r.vehicle_name }}</td>
+                        <td><span class="badge-custom badge-approved">{{ r.category }}</span></td>
+                        <td>{{ r.problem_description|truncatechars:30 }}</td>
+                        <td>
+                            {% if r.status == 'Pending' %}
+                            <span class="badge-custom badge-pending">{{ r.status }}</span>
+                            {% elif r.status == 'Approved' %}
+                            <span class="badge-custom badge-approved">{{ r.status }}</span>
+                            {% elif r.status == 'Repairing' %}
+                            <span class="badge-custom badge-repairing">{{ r.status }}</span>
+                            {% elif r.status == 'Repairing Done' %}
+                            <span class="badge-custom badge-done">{{ r.status }}</span>
+                            {% else %}
+                            <span class="badge-custom badge-released">{{ r.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'change-status' r.id %}" class="btn btn-sm btn-primary-custom rounded-pill px-3">
+                                    <i class="fas fa-edit me-1"></i>
+                                </a>
+                                <a href="{% url 'admin-delete-request' r.id %}" class="btn btn-sm btn-danger rounded-pill px-3" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash me-1"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-clipboard-list text-muted fs-3 d-block mb-2"></i>
+                            No requests found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

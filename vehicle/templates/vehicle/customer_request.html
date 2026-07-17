@@ -1,0 +1,57 @@
+{% extends 'vehicle/customerbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="stat-card text-center" style="border-left: 4px solid var(--primary);">
+                <div class="stat-icon" style="background: rgba(74, 108, 247, 0.1); color: var(--primary); margin: 0 auto 16px;">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h6 class="fw-bold">View Pending</h6>
+                <p class="text-muted small">Check your pending requests</p>
+                <a href="/customer-view-request" class="btn btn-primary-custom btn-sm rounded-pill px-4 mt-2">
+                    <i class="fas fa-arrow-right me-1"></i> View
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center" style="border-left: 4px solid var(--success);">
+                <div class="stat-icon" style="background: rgba(0, 217, 126, 0.1); color: var(--success); margin: 0 auto 16px;">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h6 class="fw-bold">Make Request</h6>
+                <p class="text-muted small">Submit a new service request</p>
+                <a href="/customer-add-request" class="btn btn-primary-custom btn-sm rounded-pill px-4 mt-2">
+                    <i class="fas fa-plus me-1"></i> Create
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center" style="border-left: 4px solid var(--warning);">
+                <div class="stat-icon" style="background: rgba(255, 184, 0, 0.1); color: var(--warning); margin: 0 auto 16px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h6 class="fw-bold">Approved</h6>
+                <p class="text-muted small">View approved requests</p>
+                <a href="/customer-view-approved-request" class="btn btn-primary-custom btn-sm rounded-pill px-4 mt-2">
+                    <i class="fas fa-arrow-right me-1"></i> View
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center" style="border-left: 4px solid var(--accent);">
+                <div class="stat-icon" style="background: rgba(255, 107, 107, 0.1); color: var(--accent); margin: 0 auto 16px;">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <h6 class="fw-bold">Invoice</h6>
+                <p class="text-muted small">View your service bills</p>
+                <a href="/customer-view-approved-request-invoice" class="btn btn-primary-custom btn-sm rounded-pill px-4 mt-2">
+                    <i class="fas fa-arrow-right me-1"></i> View
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

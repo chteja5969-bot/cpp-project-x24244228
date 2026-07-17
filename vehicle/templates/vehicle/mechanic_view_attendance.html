@@ -1,0 +1,44 @@
+{% extends 'vehicle/mechanicbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-calendar-check me-2 text-primary"></i>My Attendance Records</h5>
+            <span class="badge-custom badge-approved">{{ attendaces|length }} Records</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for w in attendaces %}
+                    <tr>
+                        <td>{{ w.date }}</td>
+                        <td>
+                            {% if w.present_status == 'Present' %}
+                            <span class="badge-custom badge-done"><i class="fas fa-check me-1"></i> Present</span>
+                            {% else %}
+                            <span class="badge-custom badge-pending"><i class="fas fa-times me-1"></i> Absent</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center text-muted py-4">
+                            <i class="fas fa-calendar text-muted fs-3 d-block mb-2"></i>
+                            No attendance records found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

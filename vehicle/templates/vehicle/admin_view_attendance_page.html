@@ -1,0 +1,46 @@
+{% extends 'vehicle/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-calendar-check me-2 text-primary"></i>Attendance for {{ date }}</h5>
+            <a href="/admin-take-attendance" class="btn btn-primary-custom btn-sm rounded-pill px-4">
+                <i class="fas fa-plus me-1"></i> Take Attendance
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Mechanic Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendancedata, mechanicdata in mylist %}
+                    <tr>
+                        <td><strong>{{ mechanicdata.get_name }}</strong></td>
+                        <td>
+                            {% if attendancedata.present_status == 'Present' %}
+                            <span class="badge-custom badge-done"><i class="fas fa-check me-1"></i> Present</span>
+                            {% else %}
+                            <span class="badge-custom badge-pending"><i class="fas fa-times me-1"></i> Absent</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center text-muted py-4">
+                            <i class="fas fa-calendar text-muted fs-3 d-block mb-2"></i>
+                            No attendance records for this date
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

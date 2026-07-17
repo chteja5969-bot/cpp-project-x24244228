@@ -1,0 +1,27 @@
+{% extends 'vehicle/mechanicbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="form-custom">
+                <div class="mb-4">
+                    <img src="{% static 'images/success.png' %}" alt="Success" style="max-width: 80px;">
+                </div>
+                <h3 class="fw-bold text-success">Thank You!</h3>
+                <p class="text-muted">Your feedback has been sent successfully.</p>
+                <p class="text-muted small">We appreciate your input and will use it to improve our services.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+                    <a href="/mechanic-feedback" class="btn btn-primary-custom">
+                        <i class="fas fa-comment me-2"></i> Send Another
+                    </a>
+                    <a href="/mechanic-dashboard" class="btn btn-outline-custom">
+                        <i class="fas fa-home me-2"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

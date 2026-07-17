@@ -1,0 +1,52 @@
+{% extends 'vehicle/customerbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="table-container">
+        <div class="table-header">
+            <h5><i class="fas fa-clock me-2 text-warning"></i>Pending Requests</h5>
+            <span class="badge-custom badge-pending">{{ enquiries|length }} Pending</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Category</th>
+                        <th>Number</th>
+                        <th>Problem</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enq in enquiries %}
+                    <tr>
+                        <td><strong>{{ enq.vehicle_name }}</strong></td>
+                        <td><span class="badge-custom badge-approved">{{ enq.category }}</span></td>
+                        <td>{{ enq.vehicle_no }}</td>
+                        <td>{{ enq.problem_description|truncatechars:30 }}</td>
+                        <td>{{ enq.date }}</td>
+                        <td><span class="badge-custom badge-pending">{{ enq.status }}</span></td>
+                        <td>
+                            <a href="{% url 'customer-delete-request' enq.id %}" class="btn btn-sm btn-danger rounded-pill px-3" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash me-1"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="fas fa-check-circle text-success fs-3 d-block mb-2"></i>
+                            No pending requests
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
