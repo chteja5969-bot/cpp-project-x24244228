@@ -162,6 +162,8 @@ STATICFILES_DIRS=[
 STATIC_DIR,
  ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 LOGIN_REDIRECT_URL='/afterlogin'
 
 #for contact us give your gmail id and password
