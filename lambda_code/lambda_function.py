@@ -17,108 +17,108 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def lambda_handler(event, context):
-    """
-    Lambda function to generate invoice PDF and return as base64 encoded string
-    """
+# def lambda_handler(event, context):
+#     """
+#     Lambda function to generate invoice PDF and return as base64 encoded string
+#     """
     
-    logger.info(f"Lambda invoked")
+#     logger.info(f"Lambda invoked")
     
-    try:
-        # Get invoice data from event
-        if 'body' in event:
-            body = json.loads(event['body'])
-            invoice_data = body.get('invoice_data', {})
-        else:
-            invoice_data = event.get('invoice_data', {})
+#     try:
+#         # Get invoice data from event
+#         if 'body' in event:
+#             body = json.loads(event['body'])
+#             invoice_data = body.get('invoice_data', {})
+#         else:
+#             invoice_data = event.get('invoice_data', {})
         
-        # For API Gateway proxy integration
-        if event.get('httpMethod'):
-            body = json.loads(event.get('body', '{}'))
-            invoice_data = body.get('invoice_data', {})
+#         # For API Gateway proxy integration
+#         if event.get('httpMethod'):
+#             body = json.loads(event.get('body', '{}'))
+#             invoice_data = body.get('invoice_data', {})
         
-        logger.info(f"Invoice data received")
+#         logger.info(f"Invoice data received")
         
-        if not invoice_data:
-            return {
-                'statusCode': 400,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                'body': json.dumps({'error': 'Missing invoice_data'})
-            }
+#         if not invoice_data:
+#             return {
+#                 'statusCode': 400,
+#                 'headers': {
+#                     'Content-Type': 'application/json',
+#                     'Access-Control-Allow-Origin': '*'
+#                 },
+#                 'body': json.dumps({'error': 'Missing invoice_data'})
+#             }
         
-        # Validate required fields
-        required_fields = ['invoice_number', 'customer_name', 'cost']
-        for field in required_fields:
-            if field not in invoice_data:
-                return {
-                    'statusCode': 400,
-                    'headers': {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
-                    },
-                    'body': json.dumps({'error': f'Missing required field: {field}'})
-                }
+#         # Validate required fields
+#         required_fields = ['invoice_number', 'customer_name', 'cost']
+#         for field in required_fields:
+#             if field not in invoice_data:
+#                 return {
+#                     'statusCode': 400,
+#                     'headers': {
+#                         'Content-Type': 'application/json',
+#                         'Access-Control-Allow-Origin': '*'
+#                     },
+#                     'body': json.dumps({'error': f'Missing required field: {field}'})
+#                 }
         
-        # Generate PDF
-        logger.info("Generating PDF...")
-        pdf_buffer = generate_invoice_pdf(invoice_data)
-        pdf_bytes = pdf_buffer.getvalue()
+#         # Generate PDF
+#         logger.info("Generating PDF...")
+#         pdf_buffer = generate_invoice_pdf(invoice_data)
+#         pdf_bytes = pdf_buffer.getvalue()
         
-        logger.info(f"PDF generated, size: {len(pdf_bytes)} bytes")
+#         logger.info(f"PDF generated, size: {len(pdf_bytes)} bytes")
         
-        # Encode PDF to base64
-        pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
+#         # Encode PDF to base64
+#         pdf_base64 = base64.b64encode(pdf_bytes).decode('utf-8')
         
-        # Generate filename
-        filename = f"invoice_{invoice_data.get('invoice_number', 'unknown')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+#         # Generate filename
+#         filename = f"invoice_{invoice_data.get('invoice_number', 'unknown')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
         
-        # Return PDF as JSON with base64 encoded body
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            'body': json.dumps({
-                'success': True,
-                'pdf_base64': pdf_base64,
-                'filename': filename,
-                'message': 'Invoice generated successfully'
-            })
-        }
+#         # Return PDF as JSON with base64 encoded body
+#         return {
+#             'statusCode': 200,
+#             'headers': {
+#                 'Content-Type': 'application/json',
+#                 'Access-Control-Allow-Origin': '*'
+#             },
+#             'body': json.dumps({
+#                 'success': True,
+#                 'pdf_base64': pdf_base64,
+#                 'filename': filename,
+#                 'message': 'Invoice generated successfully'
+#             })
+#         }
         
-    except json.JSONDecodeError as e:
-        logger.error(f"JSON decode error: {str(e)}")
-        return {
-            'statusCode': 400,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            'body': json.dumps({
-                'success': False,
-                'error': f'Invalid JSON payload: {str(e)}'
-            })
-        }
+#     except json.JSONDecodeError as e:
+#         logger.error(f"JSON decode error: {str(e)}")
+#         return {
+#             'statusCode': 400,
+#             'headers': {
+#                 'Content-Type': 'application/json',
+#                 'Access-Control-Allow-Origin': '*'
+#             },
+#             'body': json.dumps({
+#                 'success': False,
+#                 'error': f'Invalid JSON payload: {str(e)}'
+#             })
+#         }
         
-    except Exception as e:
-        logger.error(f"Error generating invoice: {str(e)}")
-        logger.error(f"Traceback: {traceback.format_exc()}")
-        return {
-            'statusCode': 500,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            'body': json.dumps({
-                'success': False,
-                'error': str(e),
-                'trace': traceback.format_exc()
-            })
-        }
+#     except Exception as e:
+#         logger.error(f"Error generating invoice: {str(e)}")
+#         logger.error(f"Traceback: {traceback.format_exc()}")
+#         return {
+#             'statusCode': 500,
+#             'headers': {
+#                 'Content-Type': 'application/json',
+#                 'Access-Control-Allow-Origin': '*'
+#             },
+#             'body': json.dumps({
+#                 'success': False,
+#                 'error': str(e),
+#                 'trace': traceback.format_exc()
+#             })
+#         }
 
 
 def generate_invoice_pdf(invoice_data):
@@ -297,3 +297,279 @@ def generate_invoice_pdf(invoice_data):
         raise
     
     return buffer
+
+
+
+# def lambda_handler(event, context):
+#     """
+#     Lambda function to generate invoice PDF and return as base64 encoded string
+#     """
+
+#     logger.info("Lambda invoked")
+#     logger.info(f"Received event: {json.dumps(event, default=str)}")
+
+#     try:
+#         invoice_data = {}
+
+#         # -----------------------------
+#         # Handle API Gateway / Lambda invocation
+#         # -----------------------------
+#         if "body" in event:
+
+#             if event["body"] is None:
+#                 invoice_data = {}
+
+#             elif isinstance(event["body"], str):
+#                 body = json.loads(event["body"])
+#                 invoice_data = body.get("invoice_data", {})
+
+#             elif isinstance(event["body"], dict):
+#                 invoice_data = event["body"].get("invoice_data", {})
+
+#         elif "invoice_data" in event:
+#             # Direct Lambda invocation (Test event)
+#             invoice_data = event["invoice_data"]
+
+#         logger.info(f"Invoice data: {invoice_data}")
+
+#         # -----------------------------
+#         # Validate input
+#         # -----------------------------
+#         if not invoice_data:
+#             return {
+#                 "statusCode": 400,
+#                 "headers": {
+#                     "Content-Type": "application/json",
+#                     "Access-Control-Allow-Origin": "*"
+#                 },
+#                 "body": json.dumps({
+#                     "success": False,
+#                     "error": "Missing invoice_data"
+#                 })
+#             }
+
+#         required_fields = [
+#             "invoice_number",
+#             "customer_name",
+#             "cost"
+#         ]
+
+#         for field in required_fields:
+#             if field not in invoice_data:
+#                 return {
+#                     "statusCode": 400,
+#                     "headers": {
+#                         "Content-Type": "application/json",
+#                         "Access-Control-Allow-Origin": "*"
+#                     },
+#                     "body": json.dumps({
+#                         "success": False,
+#                         "error": f"Missing required field: {field}"
+#                     })
+#                 }
+
+#         # -----------------------------
+#         # Generate PDF
+#         # -----------------------------
+#         logger.info("Generating PDF...")
+
+#         pdf_buffer = generate_invoice_pdf(invoice_data)
+#         pdf_bytes = pdf_buffer.getvalue()
+
+#         pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
+
+#         filename = (
+#             f"invoice_"
+#             f"{invoice_data.get('invoice_number','unknown')}_"
+#             f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+#         )
+
+#         return {
+#             "statusCode": 200,
+#             "headers": {
+#                 "Content-Type": "application/json",
+#                 "Access-Control-Allow-Origin": "*"
+#             },
+#             "body": json.dumps({
+#                 "success": True,
+#                 "pdf_base64": pdf_base64,
+#                 "filename": filename,
+#                 "message": "Invoice generated successfully"
+#             })
+#         }
+
+#     except json.JSONDecodeError as e:
+
+#         logger.exception(e)
+
+#         return {
+#             "statusCode": 400,
+#             "headers": {
+#                 "Content-Type": "application/json",
+#                 "Access-Control-Allow-Origin": "*"
+#             },
+#             "body": json.dumps({
+#                 "success": False,
+#                 "error": f"Invalid JSON: {str(e)}"
+#             })
+#         }
+
+#     except Exception as e:
+
+#         logger.exception(e)
+
+#         return {
+#             "statusCode": 500,
+#             "headers": {
+#                 "Content-Type": "application/json",
+#                 "Access-Control-Allow-Origin": "*"
+#             },
+#             "body": json.dumps({
+#                 "success": False,
+#                 "error": str(e),
+#                 "trace": traceback.format_exc()
+#             })
+#         }
+
+
+def lambda_handler(event, context):
+    """Lambda function to generate invoice PDF"""
+    
+    logger.info("Lambda invoked")
+    logger.info(f"Full event: {json.dumps(event, default=str)}")
+    
+    try:
+        # Parse input - Handle different event structures
+        invoice_data = {}
+        
+        # Check if body exists and is not None
+        if "body" in event and event["body"] is not None:
+            try:
+                # If body is a string, parse it
+                if isinstance(event["body"], str):
+                    body = json.loads(event["body"])
+                    invoice_data = body.get("invoice_data", {})
+                # If body is already a dict, use it directly
+                elif isinstance(event["body"], dict):
+                    invoice_data = event["body"].get("invoice_data", {})
+                else:
+                    logger.error(f"Unexpected body type: {type(event['body'])}")
+                    invoice_data = {}
+            except json.JSONDecodeError as e:
+                logger.error(f"Invalid JSON in body: {e}")
+                logger.error(f"Body content: {event['body'][:500] if event['body'] else 'None'}")
+                return {
+                    "statusCode": 400,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
+                    "body": json.dumps({
+                        "success": False,
+                        "error": f"Invalid JSON: {str(e)}"
+                    })
+                }
+        elif "invoice_data" in event:
+            # Direct invocation (test event)
+            invoice_data = event["invoice_data"]
+        else:
+            # No data found
+            logger.warning("No invoice_data found in event")
+            return {
+                "statusCode": 400,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                "body": json.dumps({
+                    "success": False,
+                    "error": "No invoice data provided",
+                    "received_event": str(event)[:200]  # Help with debugging
+                })
+            }
+        
+        logger.info(f"Parsed invoice_data: {invoice_data}")
+        
+        # Validate
+        if not invoice_data:
+            return {
+                "statusCode": 400,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                "body": json.dumps({
+                    "success": False,
+                    "error": "Missing invoice_data or empty data"
+                })
+            }
+        
+        required_fields = ["invoice_number", "customer_name", "cost"]
+        missing = [f for f in required_fields if f not in invoice_data]
+        
+        if missing:
+            return {
+                "statusCode": 400,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                "body": json.dumps({
+                    "success": False,
+                    "error": f"Missing fields: {', '.join(missing)}"
+                })
+            }
+        
+        # Generate PDF
+        logger.info("Generating PDF...")
+        pdf_buffer = generate_invoice_pdf(invoice_data)
+        pdf_bytes = pdf_buffer.getvalue()
+        pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
+        
+        filename = f"invoice_{invoice_data.get('invoice_number', 'unknown')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            "body": json.dumps({
+                "success": True,
+                "pdf_base64": pdf_base64,
+                "filename": filename,
+                "message": "Invoice generated successfully"
+            })
+        }
+        
+    except ImportError as e:
+        logger.error(f"Import error: {e}")
+        logger.error(traceback.format_exc())
+        return {
+            "statusCode": 500,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            "body": json.dumps({
+                "success": False,
+                "error": f"Dependency missing: {str(e)}"
+            })
+        }
+        
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        logger.error(traceback.format_exc())
+        
+        return {
+            "statusCode": 500,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            "body": json.dumps({
+                "success": False,
+                "error": str(e),
+                "trace": traceback.format_exc()
+            })
+        }
