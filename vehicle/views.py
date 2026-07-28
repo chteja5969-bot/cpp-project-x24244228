@@ -754,177 +754,272 @@ def customer_invoice_view(request):
     return render(request, 'vehicle/customer_invoice.html', context)
 
 
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
+# def download_invoice_pdf(request, enquiry_id):
+#     """
+#     Generate invoice PDF using AWS Lambda - Returns PDF directly (No S3)
+#     """
+#     try:
+#         # Get the enquiry
+#         enquiry = get_object_or_404(
+#             models.Request,
+#             id=enquiry_id,
+#             customer__user_id=request.user.id
+#         )
+        
+#         # Validate cost
+#         if not enquiry.cost or enquiry.cost == 0:
+#             return JsonResponse({
+#                 'success': False,
+#                 'error': 'Invoice not available. Cost is not set for this service.'
+#             }, status=400)
+        
+#         # Get customer details
+#         customer = models.Customer.objects.get(user_id=request.user.id)
+        
+#         # Prepare invoice data for Lambda
+#         invoice_data = {
+#             'invoice_number': f"INV-{enquiry.id:06d}",
+#             'customer_name': customer.get_name,
+#             'customer_mobile': customer.mobile,
+#             'customer_address': customer.address,
+#             'vehicle_name': enquiry.vehicle_name,
+#             'vehicle_number': str(enquiry.vehicle_no),
+#             'vehicle_brand': enquiry.vehicle_brand,
+#             'vehicle_model': enquiry.vehicle_model,
+#             'problem_description': enquiry.problem_description,
+#             'service_date': enquiry.date.strftime('%Y-%m-%d'),
+#             'cost': float(enquiry.cost)
+#         }
+        
+#         logger.info(f"Invoking Lambda for invoice: {invoice_data['invoice_number']}")
+        
+#         # Invoke Lambda function
+#         response = lambda_client.invoke(
+#             FunctionName=LAMBDA_FUNCTION_NAME,
+#             InvocationType='RequestResponse',
+#             Payload=json.dumps({
+#                 'invoice_data': invoice_data
+#             })
+#         )
+        
+#         # Read the response payload
+#         response_payload = response['Payload'].read().decode('utf-8')
+#         logger.info(f"Raw Lambda response: {response_payload[:200]}...")
+        
+#         # Try to parse as JSON
+#         try:
+#             response_data = json.loads(response_payload)
+#         except json.JSONDecodeError:
+#             # If not JSON, it might be the PDF response
+#             logger.error(f"Invalid JSON response from Lambda: {response_payload[:100]}")
+#             return JsonResponse({
+#                 'success': False,
+#                 'error': 'Invalid response from invoice service'
+#             }, status=500)
+        
+#         logger.info(f"Lambda response status: {response_data.get('statusCode')}")
+        
+#         # Check if Lambda returned PDF
+#         if response_data.get('statusCode') == 200:
+#             # Check if response contains base64 encoded PDF
+#             if response_data.get('isBase64Encoded') and response_data.get('body'):
+#                 try:
+#                     # Decode base64 PDF
+#                     pdf_data = base64.b64decode(response_data['body'])
+                    
+#                     # Create HTTP response with PDF
+#                     filename = f"invoice_{enquiry.id}.pdf"
+#                     http_response = HttpResponse(pdf_data, content_type='application/pdf')
+#                     http_response['Content-Disposition'] = f'attachment; filename="{filename}"'
+#                     http_response['Content-Length'] = len(pdf_data)
+#                     return http_response
+                    
+#                 except Exception as e:
+#                     logger.error(f"Error decoding PDF: {str(e)}")
+#                     return JsonResponse({
+#                         'success': False,
+#                         'error': 'Error generating PDF'
+#                     }, status=500)
+            
+#             # If Lambda returned JSON with error in body
+#             elif response_data.get('body'):
+#                 try:
+#                     body = json.loads(response_data['body'])
+#                     if not body.get('success', True):
+#                         return JsonResponse({
+#                             'success': False,
+#                             'error': body.get('error', 'Unknown error from Lambda')
+#                         }, status=500)
+#                 except json.JSONDecodeError:
+#                     # Body might be the PDF itself
+#                     if response_data.get('body', '').startswith('%PDF'):
+#                         # This shouldn't happen if isBase64Encoded is True
+#                         return JsonResponse({
+#                             'success': False,
+#                             'error': 'PDF received but not encoded properly'
+#                         }, status=500)
+#                     else:
+#                         return JsonResponse({
+#                             'success': False,
+#                             'error': f'Unexpected response: {response_data["body"][:100]}'
+#                         }, status=500)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 @login_required(login_url='customerlogin')
 @user_passes_test(is_customer)
 def download_invoice_pdf(request, enquiry_id):
     """
-    Generate invoice PDF using AWS Lambda - Returns PDF directly (No S3)
+    Generate invoice PDF using AWS Lambda
     """
     try:
-        # Get the enquiry
+        # Get enquiry
         enquiry = get_object_or_404(
             models.Request,
             id=enquiry_id,
             customer__user_id=request.user.id
         )
-        
+
         # Validate cost
         if not enquiry.cost or enquiry.cost == 0:
             return JsonResponse({
-                'success': False,
-                'error': 'Invoice not available. Cost is not set for this service.'
+                "success": False,
+                "error": "Invoice not available. Cost is not set for this service."
             }, status=400)
-        
-        # Get customer details
+
+        # Customer
         customer = models.Customer.objects.get(user_id=request.user.id)
-        
-        # Prepare invoice data for Lambda
+
+        # Prepare invoice data
         invoice_data = {
-            'invoice_number': f"INV-{enquiry.id:06d}",
-            'customer_name': customer.get_name,
-            'customer_mobile': customer.mobile,
-            'customer_address': customer.address,
-            'vehicle_name': enquiry.vehicle_name,
-            'vehicle_number': str(enquiry.vehicle_no),
-            'vehicle_brand': enquiry.vehicle_brand,
-            'vehicle_model': enquiry.vehicle_model,
-            'problem_description': enquiry.problem_description,
-            'service_date': enquiry.date.strftime('%Y-%m-%d'),
-            'cost': float(enquiry.cost)
+            "invoice_number": f"INV-{enquiry.id:06d}",
+            "customer_name": customer.get_name,
+            "customer_mobile": customer.mobile,
+            "customer_address": customer.address,
+            "vehicle_name": enquiry.vehicle_name,
+            "vehicle_number": str(enquiry.vehicle_no),
+            "vehicle_brand": enquiry.vehicle_brand,
+            "vehicle_model": enquiry.vehicle_model,
+            "problem_description": enquiry.problem_description,
+            "service_date": enquiry.date.strftime("%Y-%m-%d"),
+            "cost": float(enquiry.cost)
         }
-        
-        logger.info(f"Invoking Lambda for invoice: {invoice_data['invoice_number']}")
-        
-        # Invoke Lambda function
+
+        logger.info(f"Invoking Lambda for invoice {invoice_data['invoice_number']}")
+
+        # Invoke Lambda
         response = lambda_client.invoke(
             FunctionName=LAMBDA_FUNCTION_NAME,
-            InvocationType='RequestResponse',
+            InvocationType="RequestResponse",
             Payload=json.dumps({
-                'invoice_data': invoice_data
+                "invoice_data": invoice_data
             })
         )
-        
-        # Read the response payload
-        response_payload = response['Payload'].read().decode('utf-8')
-        logger.info(f"Raw Lambda response: {response_payload[:200]}...")
-        
-        # Try to parse as JSON
-        try:
-            response_data = json.loads(response_payload)
-        except json.JSONDecodeError:
-            # If not JSON, it might be the PDF response
-            logger.error(f"Invalid JSON response from Lambda: {response_payload[:100]}")
+
+        # Read Lambda response
+        payload = response["Payload"].read().decode("utf-8")
+        logger.info(f"Lambda Response: {payload}")
+
+        response_data = json.loads(payload)
+
+        # Lambda execution failed
+        if response_data.get("FunctionError"):
+            logger.error(response_data)
             return JsonResponse({
-                'success': False,
-                'error': 'Invalid response from invoice service'
+                "success": False,
+                "error": "Lambda execution failed."
             }, status=500)
-        
-        logger.info(f"Lambda response status: {response_data.get('statusCode')}")
-        
-        # Check if Lambda returned PDF
-        if response_data.get('statusCode') == 200:
-            # Check if response contains base64 encoded PDF
-            if response_data.get('isBase64Encoded') and response_data.get('body'):
-                try:
-                    # Decode base64 PDF
-                    pdf_data = base64.b64decode(response_data['body'])
-                    
-                    # Create HTTP response with PDF
-                    filename = f"invoice_{enquiry.id}.pdf"
-                    http_response = HttpResponse(pdf_data, content_type='application/pdf')
-                    http_response['Content-Disposition'] = f'attachment; filename="{filename}"'
-                    http_response['Content-Length'] = len(pdf_data)
-                    return http_response
-                    
-                except Exception as e:
-                    logger.error(f"Error decoding PDF: {str(e)}")
-                    return JsonResponse({
-                        'success': False,
-                        'error': 'Error generating PDF'
-                    }, status=500)
-            
-            # If Lambda returned JSON with error in body
-            elif response_data.get('body'):
-                try:
-                    body = json.loads(response_data['body'])
-                    if not body.get('success', True):
-                        return JsonResponse({
-                            'success': False,
-                            'error': body.get('error', 'Unknown error from Lambda')
-                        }, status=500)
-                except json.JSONDecodeError:
-                    # Body might be the PDF itself
-                    if response_data.get('body', '').startswith('%PDF'):
-                        # This shouldn't happen if isBase64Encoded is True
-                        return JsonResponse({
-                            'success': False,
-                            'error': 'PDF received but not encoded properly'
-                        }, status=500)
-                    else:
-                        return JsonResponse({
-                            'success': False,
-                            'error': f'Unexpected response: {response_data["body"][:100]}'
-                        }, status=500)
-        
-        # If Lambda returned error status
-        else:
-            error_msg = response_data.get('body', 'Unknown error')
+
+        # Lambda returned error
+        if response_data.get("statusCode") != 200:
             try:
-                error_data = json.loads(error_msg)
-                error_msg = error_data.get('error', error_msg)
-            except (json.JSONDecodeError, TypeError):
-                pass
-            
+                body = json.loads(response_data.get("body", "{}"))
+                error = body.get("error", "Unknown Lambda error")
+            except Exception:
+                error = response_data.get("body", "Unknown Lambda error")
+
             return JsonResponse({
-                'success': False,
-                'error': f'Service error: {error_msg}'
-            }, status=response_data.get('statusCode', 500))
-        
-        # Fallback error
-        return JsonResponse({
-            'success': False,
-            'error': 'Failed to generate invoice'
-        }, status=500)
-        
+                "success": False,
+                "error": error
+            }, status=500)
+
+        # Parse Lambda body
+        body = json.loads(response_data["body"])
+
+        if not body.get("success"):
+            return JsonResponse({
+                "success": False,
+                "error": body.get("error", "Invoice generation failed")
+            }, status=500)
+
+        # Decode PDF
+        pdf_bytes = base64.b64decode(body["pdf_base64"])
+
+        filename = body.get(
+            "filename",
+            f"invoice_{enquiry.id}.pdf"
+        )
+
+        # Return PDF
+        http_response = HttpResponse(
+            pdf_bytes,
+            content_type="application/pdf"
+        )
+
+        http_response["Content-Disposition"] = (
+            f'attachment; filename="{filename}"'
+        )
+
+        http_response["Content-Length"] = len(pdf_bytes)
+
+        return http_response
+
     except models.Request.DoesNotExist:
         return JsonResponse({
-            'success': False,
-            'error': 'Enquiry not found'
+            "success": False,
+            "error": "Enquiry not found."
         }, status=404)
-        
+
     except lambda_client.exceptions.ResourceNotFoundException:
-        logger.error(f"Lambda function '{LAMBDA_FUNCTION_NAME}' not found")
+        logger.exception("Lambda function not found")
         return JsonResponse({
-            'success': False,
-            'error': 'Invoice service is temporarily unavailable. Please try again later.'
+            "success": False,
+            "error": "Invoice service unavailable."
         }, status=503)
-        
+
     except lambda_client.exceptions.ClientError as e:
-        logger.error(f"AWS Lambda error: {str(e)}")
+        logger.exception("AWS Lambda ClientError")
         return JsonResponse({
-            'success': False,
-            'error': 'Unable to connect to invoice service. Please try again later.'
+            "success": False,
+            "error": str(e)
         }, status=503)
-        
+
     except Exception as e:
-        logger.error(f"Unexpected error: {str(e)}")
-        logger.error(f"Traceback: {traceback.format_exc()}")
+        logger.exception("Unexpected error")
         return JsonResponse({
-            'success': False,
-            'error': 'An unexpected error occurred. Please try again.'
+            "success": False,
+            "error": str(e)
         }, status=500)
-
-
-
-
-
-
-
-
-
-
-
-
+        
+        
+        
+        
+        
+        
+        
+        
 
 
 @login_required(login_url='customerlogin')
